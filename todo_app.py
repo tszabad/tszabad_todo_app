@@ -2,11 +2,7 @@ import sys
 from termcolor import colored
 
 args =sys.argv
-start_message = ("Command Line Todo application\n" + "=============================\n" 
-+ "Command line arguments:\n" + "    -la  Lists all the tasks\n" +  "    -l   Lists all undone tasks\n" 
-+"    -a   Adds a new task\n" + "    -r   Removes a task\n" 
-+ "    -c   Completes a task\n" +"    -am  Adds multiple new tasks\n" + colored( "    -dd  Deletes all done tasks\n", 'red')
-+ colored( "    -d   Deletes all task", 'red'))
+
 
 commands= ["-la", "-a" , "-r", "-c", "-l", "-d", "-am", "-dd"]
 
@@ -126,8 +122,13 @@ def remove_done_task():
     except IOError:
         print("Unable to write file: ", f)
 
-def todo(args
-):
+def todo(args):
+    start_message = ("Command Line Todo application\n" + "=============================\n" 
+    + "Command line arguments:\n" + "    -la  Lists all the tasks\n" +  "    -l   Lists all undone tasks\n" 
+    + "    -a   Adds a new task\n" + "    -r   Removes a task\n" 
+    + "    -c   Completes a task\n" +"    -am  Adds multiple new tasks\n" + colored( "    -dd  Deletes all done tasks\n", 'red')
+    + colored( "    -d   Deletes all task", 'red'))
+    
 #create text?.txt
     with open(file_name, 'a+') as f:
         f 
