@@ -1,15 +1,21 @@
 import sys
+from termcolor import colored
 
 args =sys.argv
 start_message = ("Command Line Todo application\n" + "=============================\n" 
 + "Command line arguments:\n" + "    -la  Lists all the tasks\n" +  "    -l   Lists all undone tasks\n" 
-+"    -a   Adds a new task\n" + "    -r   Removes an task\n" + "    -c   Completes an task")
++"    -a   Adds a new task\n" + "    -r   Removes a task\n" 
++ "    -c   Completes a task\n" +"    -am  Adds multiple new tasks\n" + colored( "    -dd  Deletes all done tasks\n", 'red')
++ colored( "    -d   Deletes all task", 'red'))
 
-commands= ["-la", "-a" , "-r", "-c", "-l"]
+commands= ["-la", "-a" , "-r", "-c", "-l", "-d", "-am", "-dd"]
+
+user_id = str(input( "Please enter user id: "))
+file_name = "text" + user_id + ".txt" 
 
 def write_file(todo):
     try:
-        with open("text.txt", "r") as f:
+        with open(file_name, "r") as f:
             f = f.readlines()
             lines=[]
             if len(f) > 0:
@@ -17,14 +23,14 @@ def write_file(todo):
                     lines.append(line)
             new_line= "[ ] " + todo + "\n"  
             lines.append(new_line)
-        with open("text.txt", "w") as nf:
+        with open(file_name, "w") as nf:
             nf.writelines(lines)
     except IOError:
         print("Unable to write file: ", f)
 
 def read_file():
     try:
-        with open("text.txt", "r") as f:
+        with open(file_name, "r") as f:
             f = f.readlines()
             if len(f) == 0:
                 print("No todos for today! :)")
@@ -36,26 +42,27 @@ def read_file():
 
 def remove_task(num1):
     try:
-        with open("text.txt", "r") as f:
+        with open(file_name, "r") as f:
             f = f.readlines()
             lines=[]
-            if len(f) >=num1-1:
+            if len(f) >=num1:
                 for i in range(len(f)):
                     if i != num1-1:
                         lines.append(f[i])
             else:
                 print("Unable to remove: index is out of bound")
-        with open("text.txt", "w") as nf:
+                lines=f
+        with open(file_name, "w") as nf:
             nf.writelines(lines)
     except IOError:
         print("Unable to write file: ", f)
 
 def check_task(num2):
     try:
-        with open("text.txt", "r") as f:
+        with open(file_name, "r") as f:
             f = f.readlines()
             lines=[]
-            if len(f) >= num2-1:
+            if len(f) >= num2:
                 for i in range(len(f)):
                     if i == num2-1:
                         line = "[X]" + f[i][3:]
@@ -64,15 +71,15 @@ def check_task(num2):
                         lines.append(f[i]) 
             else:
                 print("Unable to check: index is out of bound")
-
-        with open("text.txt", "w") as nf:
+                lines = f
+        with open(file_name, "w") as nf:
             nf.writelines(lines)    
     except IOError:
         print("Unable to write file: ", f)
 
 def read_undone():
     try:
-        with open("text.txt", "r") as f:
+        with open(file_name, "r") as f:
             f = f.readlines()
             if len(f) == 0:
                 print("No todos for today! :)")
@@ -83,50 +90,104 @@ def read_undone():
     except IOError:
         print("Unable to write file: ", f)
 
+def delete_all():
+    try:
+        with open(file_name, "w"): pass       
+    except IOError:
+        print("Unable to write file: ", f)
+
+def write_tasks(todo):
+    try:
+        with open(file_name, "r") as f:
+            f = f.readlines()
+            lines=[]
+            if len(f) > 0:
+                for line in f:
+                    lines.append(line)
+            for line in todo:
+                new_line= "[ ] " + line + "\n"
+                lines.append(new_line)
+            
+        with open(file_name, "w") as nf:
+            nf.writelines(lines)
+    except IOError:
+        print("Unable to write file: ", f)  
+
+def remove_done_task():
+    try:
+        with open(file_name, "r") as f:
+            f = f.readlines()
+            lines=[]
+            for line in f:
+                if line[0:3] != "[X]":
+                    lines.append(line)
+        with open(file_name, "w") as nf:
+            nf.writelines(lines)
+    except IOError:
+        print("Unable to write file: ", f)
+
+def todo(args
+):
+#create text?.txt
+    with open(file_name, 'a+') as f:
+        f 
+
 #if no arguments the basic message
-if len(args) == 1:
-    print(start_message)
+    if len(args) == 1:
+        print(start_message)
 
 #not correct argument    
-elif len(args) > 1 and args[1] not in commands:
-    print("Unsupported argument")
-    print(start_message)
+    elif len(args) > 1 and args[1] not in commands:
+        print("Unsupported argument")
+        print(start_message)
 
 #list task
-elif len(args) == 2 and args[1] == commands[0]:
-    read_file()
+    elif len(args) == 2 and args[1] == commands[0]:
+        read_file()
 
 #no task specified
-elif len(args) == 2 and args[1] == commands[1]:
-    print("Unable to add: no task provided")
+    elif len(args) == 2 and args[1] == commands[1]:
+        print("Unable to add: no task provided")
 
 #add task
-elif len(args) == 3 and args[1] == commands[1]:
-    write_file(args[2])
+    elif len(args) == 3 and args[1] == commands[1]:
+        write_file(args[2])
 
 #not able to remove task
-elif len(args) == 2 and args[1] == commands[2]:
-    print("Unable to remove: no index provided")
-
+    elif len(args) == 2 and args[1] == commands[2]:
+        print("Unable to remove: no index provided")
 #remove task
-elif len(args) == 3 and args[1] == commands[2]:
-    if args[2].isnumeric():
-        remove_task(int(args[2]))
-    else:
-        print("Unable to remove: index is not a number")
+    elif len(args) == 3 and args[1] == commands[2]:
+        if args[2].isnumeric():
+            remove_task(int(args[2]))
+        else:
+            print("Unable to remove: index is not a number")
 
 #not able to check task
-elif len(args) == 2 and args[1] == commands[3]:
-    print("Unable to check: no index provided")
+    elif len(args) == 2 and args[1] == commands[3]:
+        print("Unable to check: no index provided")
 
 #check task
-elif len(args) == 3 and args[1] == commands[3]:
-    if args[2].isnumeric():
-        check_task(int(args[2]))
-    else:
-        print("Unable to remove: index is not a number")
+    elif len(args) == 3 and args[1] == commands[3]:
+        if args[2].isnumeric():
+            check_task(int(args[2]))
+        else:
+            print("Unable to remove: index is not a number")
 
 #list undone_task
-elif len(args) == 2 and args[1] == commands[4]:
-    read_undone()
-    
+    elif len(args) == 2 and args[1] == commands[4]:
+        read_undone()
+
+#delete all tasks
+    elif len(args) == 2 and args[1] == commands[5]:
+        delete_all()
+
+#add multiple tasks
+    elif len(args) >= 3 and args[1] == commands[6]:
+        write_tasks(args[2:])
+
+#delete done tasks
+    elif len(args) == 2 and args[1] == commands[7]:
+        remove_done_task()
+
+todo(args)
