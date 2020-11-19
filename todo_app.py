@@ -1,10 +1,7 @@
 import sys
 from termcolor import colored
 
-args =sys.argv
-
-
-commands= ["-la", "-a" , "-r", "-c", "-l", "-d", "-am", "-dd"]
+args = sys.argv
 
 user_id = str(input( "Please enter user id: "))
 file_name = "text" + user_id + ".txt" 
@@ -123,6 +120,8 @@ def remove_done_task():
         print("Unable to write file: ", f)
 
 def todo(args):
+    commands= ["-la", "-a" , "-r", "-c", "-l", "-d", "-am", "-dd"]
+    
     start_message = ("Command Line Todo application\n" + "=============================\n" 
     + "Command line arguments:\n" + "    -la  Lists all the tasks\n" +  "    -l   Lists all undone tasks\n" 
     + "    -a   Adds a new task\n" + "    -r   Removes a task\n" 
